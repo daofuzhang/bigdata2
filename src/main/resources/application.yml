@@ -1,0 +1,25 @@
+spring:
+ datasource:
+   url: jdbc:mysql://10.231.8.147:3306/HRSOURCE
+   username: ENC(usdIw6QV+19f9LWhHYEC/Q==) #hruser
+   password: ENC(XaTi2n8oA3LnAUKvcYG+9XyelQUKhTb9) #P@ssw0rd0001
+   driver-class-name: com.mysql.cj.jdbc.Driver
+jco:
+ client:
+  ashost: 10.0.1.252
+  sysnr: 00
+  client: 300
+  user: ENC(CJBPs8GxwDMCBVyZ7j1ReNGWDsZoLVKJ) #HQTR0701009
+  passwd: ENC(zRDAWukh47BJh2ZQEc5wRA==) #123123
+  lang: ZH
+mail:
+ transport:
+  protocol: smtp
+ smtp:
+  auth: true
+  host: mail.want-want.com
+  user: iwant2test@want-want.com
+  password: MekE,3T08og6
+  from: iwant2test@want-want.com
+  mailTo: Eddy.Zeng@want-want.com
+  subject: 人才大數據同步排程通知
