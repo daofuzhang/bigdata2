@@ -16,6 +16,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -32,7 +34,8 @@ import com.want.util.SendMailUtils;
 
 @Component
 public class JobCommandLineRunner implements CommandLineRunner {
-
+	private Logger logger = LoggerFactory.getLogger(JobCommandLineRunner.class);
+	
 	public static final String DEST_NAME = "TalentBigData";
 	@Autowired
 	private SapDao jco;
@@ -47,7 +50,7 @@ public class JobCommandLineRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		if (args == null || args.length == 0) {
-			System.out.println("args is null");
+			logger.debug("bigdata run args is null");
 			return;
 		}
 		// 初始化DEST
@@ -69,12 +72,14 @@ public class JobCommandLineRunner implements CommandLineRunner {
 		List<String> delFlows = new ArrayList<>();
 
 		if (args[0].equals("INIT_CHANGE_LOG")) {
+			logger.info("JobCommandLineRunner INIT_CHANGE_LOG begin "+new Date());
 			try {
 				Queue<String> compQueue = new LinkedBlockingQueue<String>();
 				for (int i = 1; i < args.length; i++) {
 					compQueue.offer(args[i]);
 				}
 				while(compQueue.size()!=0) {
+					logger.info("JobCommandLineRunner INIT_CHANGE_LOG["+compQueue.peek()+"]:START......QueueSize:"+compQueue.size());
 					System.out.println("INIT_CHANGE_LOG["+compQueue.peek()+"]:START......QueueSize:"+compQueue.size());
 					Queue<Map<String, String>> queue = null;
 					queue = jco.getSAPChangeQueueByTable("ZRFCHR037", "T_ZHRS054", "WERKS",compQueue);
@@ -97,9 +102,11 @@ public class JobCommandLineRunner implements CommandLineRunner {
 				}
 			} catch (Exception e) {
 				msgBuilder.append("<p>" + date + " INIT_CHANGE_LOG:" + e.getMessage() + "</p>");
-				e.printStackTrace();
+				logger.error("JobCommandLineRunner run INIT_CHANGE_LOG error "+"<p>" + date + " INIT_CHANGE_LOG:" + e.getMessage() + "</p>");
 			}
+			logger.info("JobCommandLineRunner INIT_CHANGE_LOG end "+new Date());
 		} if (args[0].equals("INIT_ATT_RECORD")) {
+			logger.info("JobCommandLineRunner INIT_ATT_RECORD begin "+new Date());
 			try {
 				for (int i = 1; i < args.length; i++) {
 					System.out.println("INIT_ATT_RECORD:START......:"+args[i]);
@@ -128,11 +135,12 @@ public class JobCommandLineRunner implements CommandLineRunner {
 				}
 			} catch (Exception e) {
 				msgBuilder.append("<p>" + date + " INIT_CHANGE_LOG:" + e.getMessage() + "</p>");
-				e.printStackTrace();
+				logger.error("JobCommandLineRunner run INIT_ATT_RECORD error "+"<p>" + date + " INIT_CHANGE_LOG:" + e.getMessage() + "</p>");
 			}
+			logger.info("JobCommandLineRunner INIT_ATT_RECORD end "+new Date());
 		} else {
 			for (String flow : args) {
-				System.out.println(flow + ":START......");
+				logger.info("JobCommandLineRunner run daily "+flow + ":START......"+new Date());
 				HashMap<String, String> querymap = new HashMap<String, String>();
 				Queue<Map<String, String>> queue = null;
 				String queryDate = date;
@@ -219,9 +227,9 @@ public class JobCommandLineRunner implements CommandLineRunner {
 			        
 				} catch (Exception e) {
 					msgBuilder.append("<p>" + date + " " + flow + ":" + e.getMessage() + "</p>");
-					e.printStackTrace();
+					logger.error("JobCommandLineRunner run flow error "+"<p>" + date + " " + flow + ":" + e.getMessage() + "</p>");
 				}
-
+				logger.info("JobCommandLineRunner run daily "+flow + ":END......"+new Date());
 			}
 		}
 
@@ -240,7 +248,7 @@ public class JobCommandLineRunner implements CommandLineRunner {
 		if (isPrd && msgBuilder.length() != 0) {
 			sm.send(msgBuilder.toString());
 		} else {
-			System.err.println("errMsg:" + msgBuilder.toString());
+			logger.error("JobCommandLineRunner run flow  "+msgBuilder.toString());
 		}
 	}
 

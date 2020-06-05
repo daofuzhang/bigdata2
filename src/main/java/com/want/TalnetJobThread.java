@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ import com.want.talent.dao.TalentDao;
 @Component
 @Scope("prototype")
 public class TalnetJobThread implements Runnable {
+	private Logger logger = LoggerFactory.getLogger(TalnetJobThread.class);
 	private Queue<Map<String, String>> queue = null;
 
 	private String flow = "";
@@ -88,7 +91,7 @@ public class TalnetJobThread implements Runnable {
 		} catch (Exception e) {
 			errorSet.add(flow);
 			errMsgBuilder.append("<p>"+date + " " + flow + ":" + e.getMessage() + "</p>");
-			e.printStackTrace();
+			logger.error("TalnetJobThread run error "+"<p>"+date + " " + flow + ":" + e.getMessage() + "</p>");
 		}
 	}
 

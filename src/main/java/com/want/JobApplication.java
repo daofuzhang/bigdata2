@@ -9,9 +9,13 @@
  */
 package com.want;
 
+import java.util.Date;
+
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -19,9 +23,11 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class JobApplication {
+	private static Logger logger = LoggerFactory.getLogger(JobApplication.class);
 
 	public static void main(String[] args) {
-		args = new String[] { "PUNISH_INFO"};
+		logger.info("bigdata start begin "+new Date());
+    	args = new String[] { "PUNISH_INFO"};
 //		args = new String[] { "PUNISH_INFO","TRAINING_LOG","TEACHING" };
 //		args = new String[] { "KPI_SCORE"};
 //		args = new String[] { "PUNISH_INFO", "EMP_INFO","POS_INFO", "TRAINING_LOG","TEACHING","ATT_RECORD" };

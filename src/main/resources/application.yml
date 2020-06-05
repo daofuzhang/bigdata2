@@ -23,3 +23,7 @@ mail:
   from: iwant2test@want-want.com
   mailTo: Eddy.Zeng@want-want.com
   subject: 人才大數據同步排程通知
+logging:
+  file: bigdata.log
+  level:
+    com.want: DEBUG

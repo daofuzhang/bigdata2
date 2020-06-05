@@ -11,7 +11,6 @@ package com.want.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-
 import javax.mail.Authenticator;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
@@ -22,12 +21,16 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SendMailUtils {
+	private Logger logger = LoggerFactory.getLogger(SendMailUtils.class);
+
+	
 	@Value("${mail.smtp.host}")
 	private String host;
 	@Value("${mail.smtp.user}")
@@ -69,7 +72,7 @@ public class SendMailUtils {
 
 			Transport.send(mimeMsg);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error("SendMailUtils send error:"+e.getMessage(), e);
 		}
 	}
 }

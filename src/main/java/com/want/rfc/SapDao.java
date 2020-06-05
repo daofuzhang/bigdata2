@@ -1,15 +1,13 @@
 package com.want.rfc;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -24,7 +22,8 @@ import com.want.JobCommandLineRunner;
 @Component
 public class SapDao {
 
-	
+	private Logger logger = LoggerFactory.getLogger(SapDao.class);
+
 	private StringBuilder msgBuilder;
 	
 	public void setMsgBuilder(StringBuilder msgBuilder) {
@@ -50,8 +49,6 @@ public class SapDao {
 					input.setValue(parmakey, queryMap.get(parmakey));
 				}
 			}
-
-
 			JCoTable tables = function.getTableParameterList().getTable(resultTable);
 			
 			try {
@@ -92,6 +89,7 @@ public class SapDao {
 				msgBuilder.append("<p>element:" + resultQueue.element()+"</p>");
 			}
 		} catch (JCoException e) {
+			logger.error("SapDao getSAPQueue error "+e.getMessage());
 			throw (e);
 		}
 		return resultQueue;
@@ -160,6 +158,7 @@ public class SapDao {
 				msgBuilder.append("<p>element:" + resultQueue.element()+"</p>");
 			}
 		} catch (JCoException e) {
+			logger.error("SapDao getSAPChangeQueueByTable error "+e.getMessage());
 			throw (e);
 		}
 		return resultQueue;

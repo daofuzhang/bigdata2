@@ -11,10 +11,13 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import com.want.JobApplication;
 import com.want.talent.dao.TalentDao;
 import com.want.talent.vo.AbiScore;
 import com.want.talent.vo.AudEvent;
@@ -22,6 +25,7 @@ import com.want.talent.vo.AudEvent;
 @Service
 @Configurable
 public class TalentDaoJdbc implements TalentDao {
+	private Logger logger = LoggerFactory.getLogger(TalentDaoJdbc.class);
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -37,19 +41,19 @@ public class TalentDaoJdbc implements TalentDao {
 			if (rs != null)
 				rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("TalentDaoJdbc closeConn rs error "+e.getMessage());
 		}
 		try {
 			if (ps != null)
 				ps.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("TalentDaoJdbc closeConn ps error "+e.getMessage());
 		}
 		try {
 			if (conn != null)
 				conn.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("TalentDaoJdbc closeConn conn error "+e.getMessage());
 		}
 	}
 
@@ -88,9 +92,10 @@ public class TalentDaoJdbc implements TalentDao {
 				try {
 					conn.rollback();
 				} catch (SQLException ex) {
-					ex.printStackTrace();
+					logger.error("TalentDaoJdbc replaceAbiscore rollback conn error "+e.getMessage());
 				}
 			}
+			logger.error("TalentDaoJdbc replaceAbiscore  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -133,6 +138,7 @@ public class TalentDaoJdbc implements TalentDao {
 					ex.printStackTrace();
 				}
 			}
+			logger.error("TalentDaoJdbc replaceAudEvent  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -179,6 +185,7 @@ public class TalentDaoJdbc implements TalentDao {
 					ex.printStackTrace();
 				}
 			}
+			logger.error("TalentDaoJdbc insertPunishInfo  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -228,6 +235,7 @@ public class TalentDaoJdbc implements TalentDao {
 					ex.printStackTrace();
 				}
 			}
+			logger.error("TalentDaoJdbc replaceKpiEvent  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -274,6 +282,7 @@ public class TalentDaoJdbc implements TalentDao {
 					ex.printStackTrace();
 				}
 			}
+			logger.error("TalentDaoJdbc insertKpiInfo  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -325,6 +334,7 @@ public class TalentDaoJdbc implements TalentDao {
 					ex.printStackTrace();
 				}
 			}
+			logger.error("TalentDaoJdbc insertKpiScore  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -374,8 +384,10 @@ public class TalentDaoJdbc implements TalentDao {
 			try {
 				conn.rollback();
 			} catch (SQLException ex) {
+				logger.error("TalentDaoJdbc replaceChangeLog rollback error "+e.getMessage());
 				ex.printStackTrace();
 			}
+			logger.error("TalentDaoJdbc replaceChangeLog  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -430,6 +442,7 @@ public class TalentDaoJdbc implements TalentDao {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
+			logger.error("TalentDaoJdbc replaceEmpInfo  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -481,6 +494,7 @@ public class TalentDaoJdbc implements TalentDao {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
+			logger.error("TalentDaoJdbc insertPosInfo  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -527,6 +541,7 @@ public class TalentDaoJdbc implements TalentDao {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
+			logger.error("TalentDaoJdbc insertTrainingLog  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -576,6 +591,7 @@ public class TalentDaoJdbc implements TalentDao {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
+			logger.error("TalentDaoJdbc insertTeaching  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -620,6 +636,7 @@ public class TalentDaoJdbc implements TalentDao {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
+			logger.error("TalentDaoJdbc replaceAttRecord  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -638,6 +655,7 @@ public class TalentDaoJdbc implements TalentDao {
 			ps.setString(1, maxDate);
 			ps.execute();
 		} catch (Exception e) {
+			logger.error("TalentDaoJdbc deleteOldData  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
@@ -656,6 +674,7 @@ public class TalentDaoJdbc implements TalentDao {
 			ps.setString(1, maxDate);
 			ps.execute();
 		} catch (Exception e) {
+			logger.error("TalentDaoJdbc deleteNewData  error "+e.getMessage());
 			throw (e);
 		} finally {
 			closeConn(conn, ps, rs);
